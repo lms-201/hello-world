@@ -6,19 +6,23 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CourseManager.Models;
+using CourseManager.BLLs.Classes;
+using CourseManager.Filters;
 
 namespace CourseManager.Controllers
 {
+    [RequireAuthentication]
+    [ActionResultExceptionFilter]
     public class ClassController : Controller
     {
         private CourseManagerEntities db = new CourseManagerEntities();
-
+        private IClassRepository _repository = new ClassRepository();
         //
         // GET: /Class/
 
         public ActionResult Index()
         {
-            return View(db.Classe.ToList());
+            return View(db.Classes.ToList());
         }
 
         //
@@ -26,12 +30,12 @@ namespace CourseManager.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Classe Classe = db.Classe.Find(id);
-            if (Classe == null)
+            Classes classes = db.Classes.Find(id);
+            if (classes == null)
             {
                 return HttpNotFound();
             }
-            return View(Classe);
+            return View(classes);
         }
 
         //
@@ -39,25 +43,30 @@ namespace CourseManager.Controllers
 
         public ActionResult Create()
         {
-            var teacher = db.Teachers.ToList();
-            ViewBag.Teachers = teacher;
+            var teachers = db.Teachers.ToList();
+            ViewBag.teachers = teachers;
             return View();
         }
 
         //
         // POST: /Class/Create
 
+        public ActionResult ShowCourseManagement(int id)
+        {
+            return View(_repository.GetClassCourse(id));
+        }
+
         [HttpPost]
-        public ActionResult Create(Classe Classe)
+        public ActionResult Create(Classes classes)
         {
             if (ModelState.IsValid)
             {
-                db.Classe.Add(Classe);
+                db.Classes.Add(classes);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(Classe);
+            return View(classes);
         }
 
         //
@@ -65,30 +74,30 @@ namespace CourseManager.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            var teacher = db.Teachers.ToList();
-            ViewBag.Teachers = teacher;
-            Classe Classe = db.Classe.Find(id);
-            if (Classe == null)
+            var teachers = db.Teachers.ToList();
+            ViewBag.teachers = teachers;
+
+            Classes classes = db.Classes.Find(id);
+            if (classes == null)
             {
                 return HttpNotFound();
             }
-
-            return View(Classe);
+            return View(classes);
         }
 
         //
         // POST: /Class/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Classe Classe)
+        public ActionResult Edit(Classes classes)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(Classe).State = EntityState.Modified;
+                db.Entry(classes).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(Classe);
+            return View(classes);
         }
 
         //
@@ -96,12 +105,12 @@ namespace CourseManager.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            Classe Classe = db.Classe.Find(id);
-            if (Classe == null)
+            Classes classes = db.Classes.Find(id);
+            if (classes == null)
             {
                 return HttpNotFound();
             }
-            return View(Classe);
+            return View(classes);
         }
 
         //
@@ -110,8 +119,8 @@ namespace CourseManager.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Classe Classe = db.Classe.Find(id);
-            db.Classe.Remove(Classe);
+            Classes classes = db.Classes.Find(id);
+            db.Classes.Remove(classes);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

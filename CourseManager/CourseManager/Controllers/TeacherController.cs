@@ -6,9 +6,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CourseManager.Models;
+using CourseManager.Filters;
 
 namespace CourseManager.Controllers
 {
+    [RequireAuthentication]
+    [ActionResultExceptionFilter]
     public class TeacherController : Controller
     {
         private CourseManagerEntities db = new CourseManagerEntities();

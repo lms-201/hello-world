@@ -19,8 +19,11 @@ namespace CourseManager.Models
         [Required]
         public int Id { get; set; }
         [StringLength(20)]
+        [Required]
+        [Display(Name = "姓名")]
         public string Name { get; set; }
         [Required]
+        [Display(Name = "班级")]
         public int ClassId { get; set; }
     }
 }

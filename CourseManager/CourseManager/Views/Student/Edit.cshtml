@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Edit";
+    var class_ = (List<CourseManager.Models.Classes>)ViewBag.Class_;
 }
 
 <h2>Edit</h2>
@@ -15,19 +16,23 @@
         @Html.HiddenFor(model => model.Id)
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-lable col-md-2"})
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Name)
+        <div class="editor-field col-md-10">
+            @Html.TextBoxFor(model => model.Name, new {@class = "form-control"})
             @Html.ValidationMessageFor(model => model.Name)
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.ClassId)
+            @Html.LabelFor(model => model.ClassName, htmlAttributes: new { @class = "control-lable col-md-2"})
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ClassId)
-            @Html.ValidationMessageFor(model => model.ClassId)
+        <div class="editor-field col-md-10">
+            <select name="ClassId" class="editor-field form-control">
+                @foreach (var temp in class_)
+                { 
+                    <option value="@temp.Id">@temp.Name</option>
+                }
+            </select>
         </div>
 
         <p>
